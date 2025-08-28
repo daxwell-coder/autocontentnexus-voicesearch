@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { ContentGenerationForm } from '../components/ContentGenerationForm';
 import { BrandVettingEngine } from '../components/BrandVettingEngine';
-import { Sparkles, Users, TrendingUp, CheckCircle2, Zap, Brain, Rocket, Shield } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { Sparkles, Users, TrendingUp, CheckCircle2, Zap, Brain, Rocket, Shield, Lock, Star } from 'lucide-react';
 
 interface AIStudioProps {
   className?: string;
 }
 
 export function AIStudioPage({ className = '' }: AIStudioProps) {
+  const { user, isPremium, loading } = useAuth();
   return (
     <div className={`min-h-screen bg-gray-50 ${className}`}>
       {/* Header */}
@@ -122,91 +124,190 @@ export function AIStudioPage({ className = '' }: AIStudioProps) {
             <h2 className="text-xl font-semibold flex items-center">
               <Zap className="h-5 w-5 mr-2 text-yellow-300" />
               MiniMax Premium AI Features
+              {!isPremium && (
+                <Lock className="h-4 w-4 ml-2 text-gray-300" />
+              )}
             </h2>
-            <p className="text-purple-100 mt-1">Advanced AI-powered capabilities exclusive to MiniMax users</p>
+            <p className="text-purple-100 mt-1">
+              {isPremium 
+                ? "Advanced AI-powered capabilities exclusive to MiniMax users"
+                : "Unlock advanced AI-powered capabilities with MiniMax Premium"
+              }
+            </p>
           </div>
           
           <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Multimodal Content Generation */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <div className="flex items-center mb-4">
-                  <div className="h-12 w-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mr-4">
-                    <Sparkles className="h-6 w-6 text-white" />
+            {isPremium ? (
+              // Premium User: Show Full Features
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Multimodal Content Generation */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                    <div className="flex items-center mb-4">
+                      <div className="h-12 w-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mr-4">
+                        <Sparkles className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">Multimodal AI Generator</h3>
+                        <p className="text-xs text-purple-200">Premium Feature</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-purple-100 mb-4">
+                      Generate text, images, audio, and video content simultaneously with our advanced MiniMax AI models.
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-green-300">Active & Ready</span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">Multimodal AI Generator</h3>
-                    <p className="text-xs text-purple-200">Premium Feature</p>
-                  </div>
-                </div>
-                <p className="text-sm text-purple-100 mb-4">
-                  Generate text, images, audio, and video content simultaneously with our advanced MiniMax AI models.
-                </p>
-                <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-green-300">Active & Ready</span>
-                </div>
-              </div>
 
-              {/* Enhanced Text Generation */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <div className="flex items-center mb-4">
-                  <div className="h-12 w-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mr-4">
-                    <Brain className="h-6 w-6 text-white" />
+                  {/* Enhanced Text Generation */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                    <div className="flex items-center mb-4">
+                      <div className="h-12 w-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mr-4">
+                        <Brain className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">MiniMax Text Pro</h3>
+                        <p className="text-xs text-purple-200">Premium Feature</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-purple-100 mb-4">
+                      Advanced text generation with 100K+ token context, specialized models for technical writing.
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-green-300">Processing 24/7</span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">MiniMax Text Pro</h3>
-                    <p className="text-xs text-purple-200">Premium Feature</p>
-                  </div>
-                </div>
-                <p className="text-sm text-purple-100 mb-4">
-                  Advanced text generation with 100K+ token context, specialized models for technical writing.
-                </p>
-                <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-green-300">Processing 24/7</span>
-                </div>
-              </div>
 
-              {/* Advanced Image Generation */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                <div className="flex items-center mb-4">
-                  <div className="h-12 w-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-lg flex items-center justify-center mr-4">
-                    <Rocket className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold">MiniMax Image Pro</h3>
-                    <p className="text-xs text-purple-200">Premium Feature</p>
-                  </div>
-                </div>
-                <p className="text-sm text-purple-100 mb-4">
-                  Ultra-high resolution images, custom styles, and commercial licensing for business use.
-                </p>
-                <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-green-300">High Performance</span>
-                </div>
-              </div>
-            </div>
-            
-            {/* Premium Status Banner */}
-            <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="h-8 w-8 bg-yellow-400 rounded-lg flex items-center justify-center">
-                    <CheckCircle2 className="h-5 w-5 text-yellow-900" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">MiniMax Premium Active</h4>
-                    <p className="text-xs text-purple-200">Full access to all advanced AI features</p>
+                  {/* Advanced Image Generation */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                    <div className="flex items-center mb-4">
+                      <div className="h-12 w-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-lg flex items-center justify-center mr-4">
+                        <Rocket className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">MiniMax Image Pro</h3>
+                        <p className="text-xs text-purple-200">Premium Feature</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-purple-100 mb-4">
+                      Ultra-high resolution images, custom styles, and commercial licensing for business use.
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-green-300">High Performance</span>
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium text-yellow-300">Unlimited Usage</p>
-                  <p className="text-xs text-purple-200">API Credits: Active</p>
+                
+                {/* Premium Status Banner */}
+                <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-8 w-8 bg-yellow-400 rounded-lg flex items-center justify-center">
+                        <CheckCircle2 className="h-5 w-5 text-yellow-900" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">MiniMax Premium Active</h4>
+                        <p className="text-xs text-purple-200">Full access to all advanced AI features</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-yellow-300">Unlimited Usage</p>
+                      <p className="text-xs text-purple-200">API Credits: Active</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            ) : (
+              // Non-Premium User: Show Locked State
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Locked Multimodal Content Generation */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 relative">
+                    <div className="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                      <Lock className="h-8 w-8 text-white/70" />
+                    </div>
+                    <div className="flex items-center mb-4 opacity-50">
+                      <div className="h-12 w-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center mr-4">
+                        <Sparkles className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">Multimodal AI Generator</h3>
+                        <p className="text-xs text-purple-200">Premium Only</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-purple-100 mb-4 opacity-50">
+                      Generate text, images, audio, and video content simultaneously.
+                    </p>
+                  </div>
+
+                  {/* Locked Enhanced Text Generation */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 relative">
+                    <div className="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                      <Lock className="h-8 w-8 text-white/70" />
+                    </div>
+                    <div className="flex items-center mb-4 opacity-50">
+                      <div className="h-12 w-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mr-4">
+                        <Brain className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">MiniMax Text Pro</h3>
+                        <p className="text-xs text-purple-200">Premium Only</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-purple-100 mb-4 opacity-50">
+                      Advanced text generation with 100K+ token context.
+                    </p>
+                  </div>
+
+                  {/* Locked Advanced Image Generation */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 relative">
+                    <div className="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                      <Lock className="h-8 w-8 text-white/70" />
+                    </div>
+                    <div className="flex items-center mb-4 opacity-50">
+                      <div className="h-12 w-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-lg flex items-center justify-center mr-4">
+                        <Rocket className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">MiniMax Image Pro</h3>
+                        <p className="text-xs text-purple-200">Premium Only</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-purple-100 mb-4 opacity-50">
+                      Ultra-high resolution images and commercial licensing.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Upgrade CTA Banner */}
+                <div className="mt-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-lg p-6 border border-orange-300">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-12 w-12 bg-white rounded-lg flex items-center justify-center">
+                        <Star className="h-6 w-6 text-orange-500" />
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-bold">Unlock MiniMax Premium</h4>
+                        <p className="text-sm opacity-80">
+                          Get unlimited access to advanced AI features, priority support, and commercial licensing
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end space-y-2">
+                      <button className="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors flex items-center space-x-2">
+                        <Zap className="h-4 w-4" />
+                        <span>Upgrade Now</span>
+                      </button>
+                      <p className="text-sm opacity-80">Starting at $29/month</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
