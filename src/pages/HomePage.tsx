@@ -22,110 +22,13 @@ const HomePage: React.FC = () => {
             for sustainable living. Join thousands in building a greener future.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={async () => {
-                // Enhanced voice search with proper permission handling
-                const windowWithSpeech = window as any;
-                
-                try {
-                  // Check if browser supports speech recognition
-                  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-                    alert('Voice search is not supported in this browser. Please use Chrome, Edge, or Safari.');
-                    return;
-                  }
-                  
-                  // Request microphone permission first
-                  try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    // Stop the stream immediately as we only needed permission
-                    stream.getTracks().forEach(track => track.stop());
-                    
-                    // Now start speech recognition
-                    const SpeechRecognition = windowWithSpeech.webkitSpeechRecognition || windowWithSpeech.SpeechRecognition;
-                    const recognition = new SpeechRecognition();
-                    
-                    recognition.continuous = false;
-                    recognition.interimResults = false;
-                    recognition.lang = 'en-US';
-                    
-                    recognition.onstart = () => {
-                      console.log('Voice search started - listening...');
-                      // Visual feedback
-                      const button = event?.target as HTMLButtonElement;
-                      if (button) {
-                        button.textContent = 'Listening... Speak now!';
-                        button.classList.add('animate-pulse');
-                      }
-                    };
-                    
-                    recognition.onresult = (event: any) => {
-                      const transcript = event.results[0][0].transcript;
-                      console.log('Voice search result:', transcript);
-                      
-                      // Show success feedback
-                      alert(`Voice search captured: "${transcript}". Redirecting to search results...`);
-                      
-                      // Use React Router navigation instead of window.location
-                      setTimeout(() => {
-                        window.location.href = `/products?search=${encodeURIComponent(transcript)}`;
-                      }, 1000);
-                    };
-                    
-                    recognition.onerror = (event: any) => {
-                      console.error('Voice search error:', event.error);
-                      
-                      // Reset button text
-                      const button = document.querySelector('[data-voice-search]') as HTMLButtonElement;
-                      if (button) {
-                        button.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>Try Voice Search';
-                        button.classList.remove('animate-pulse');
-                      }
-                      
-                      let errorMessage = 'Voice search failed. Please try again.';
-                      switch (event.error) {
-                        case 'not-allowed':
-                          errorMessage = 'Microphone access denied. Please allow microphone permission and try again.';
-                          break;
-                        case 'no-speech':
-                          errorMessage = 'No speech detected. Please try again and speak clearly.';
-                          break;
-                        case 'network':
-                          errorMessage = 'Network error. Please check your connection and try again.';
-                          break;
-                        case 'aborted':
-                          errorMessage = 'Voice search was cancelled.';
-                          break;
-                      }
-                      alert(errorMessage);
-                    };
-                    
-                    recognition.onend = () => {
-                      // Reset button appearance
-                      const button = document.querySelector('[data-voice-search]') as HTMLButtonElement;
-                      if (button) {
-                        button.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>Try Voice Search';
-                        button.classList.remove('animate-pulse');
-                      }
-                    };
-                    
-                    recognition.start();
-                    
-                  } catch (permissionError) {
-                    console.error('Microphone permission error:', permissionError);
-                    alert('Microphone access is required for voice search. Please allow microphone permission in your browser settings and try again.');
-                  }
-                  
-                } catch (error) {
-                  console.error('Voice search initialization error:', error);
-                  alert('Voice search could not be initialized. Please ensure you\'re using a supported browser (Chrome, Edge, Safari) and try again.');
-                }
-              }}
-              data-voice-search
+            <Link
+              to="/voice-search"
               className="inline-flex items-center px-8 py-4 rounded-lg text-lg font-semibold text-white bg-purple-600 hover:bg-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               <Mic className="w-5 h-5 mr-2" />
               Try Voice Search
-            </button>
+            </Link>
             <Link
               to="/ai-studio"
               className="inline-flex items-center px-8 py-4 rounded-lg text-lg font-semibold text-white bg-green-600 hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
